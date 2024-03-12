@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   Panel,
@@ -12,36 +12,29 @@ import {
   NativeSelect,
   Cell,
 } from "@vkontakte/vkui";
+import { ACTIVE_PANEL, COLOR_OPTIONS, DEFAULT_FILTER, FILTER_FIELDS, FRIENDS_OPTIONS, OPTION_VALUES, PRIVATES_OPTIONS } from "../constants";
 
 const ListCoop = ({ data }) => {
-  const [filter, setFilter] = useState({
-    closed: "all",
-    friends: "all",
-    avatar_color: "all",
-  });
-
-  const [activePanel, setActivePanel] = useState("list");
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
+  const [activePanel, setActivePanel] = useState(ACTIVE_PANEL.LIST);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  
-  const uniqueColors = [...new Set(data.map((group) => group.avatar_color))].filter(Boolean);
 
-  const filterGroups = () => {
-    return data.filter((group) => {
-      const isClosedMatch = filter.closed === "all" || group.closed.toString() === filter.closed;
-      const isFriendsMatch = filter.friends === "all" || (group.friends ? group.friends.length > 0 : false).toString() === filter.friends;
-      const isAvatarColorMatch = filter.avatar_color === "all" || (group.avatar_color || "no-avatar") === filter.avatar_color;
-      return isClosedMatch && isFriendsMatch && isAvatarColorMatch;
-    });
-  };
+  const uniqueColors = useMemo(() => [...new Set(data.map((group) => group.avatar_color))].filter(Boolean), [data]);
 
-  const filteredGroups = filterGroups();
+  const filteredGroups = useMemo(() => data.filter((group) => {
+    const isClosedMatch = filter.closed === OPTION_VALUES.ALL || group.closed.toString() === filter.closed;
+    const isFriendsMatch = filter.friends === OPTION_VALUES.ALL || (group.friends ? group.friends.length > 0 : false).toString() === filter.friends;
+    const isAvatarColorMatch = filter.avatar_color === OPTION_VALUES.ALL || (group.avatar_color || OPTION_VALUES.NOT_INCLUDES) === filter.avatar_color;
+
+    return isClosedMatch && isFriendsMatch && isAvatarColorMatch;
+  }), [data, filter]);
 
   const handleGroupClick = (group) => {
     setSelectedGroup(group);
-    setActivePanel("group");
+    setActivePanel(ACTIVE_PANEL.GROUP);
   };
 
-  const handleChange = (field) => (e) => {
+  const handleChange = (e, field) => {
     setFilter({
       ...filter,
       [field]: e.target.value,
@@ -52,22 +45,20 @@ const ListCoop = ({ data }) => {
     <View activePanel={activePanel}>
       <Panel id="list">
         <PanelHeader>Группы</PanelHeader>
-
-        <NativeSelect top="Тип приватности" value={filter.closed} onChange={handleChange("closed")}>
-          <option value="all">Все</option>
-          <option value="true">Закрытые</option>
-          <option value="false">Открытые</option>
+        <NativeSelect top="Тип приватности" value={filter.closed} onChange={(e) => handleChange(e, FILTER_FIELDS.CLOSED)}>
+          {
+            PRIVATES_OPTIONS.map(color => <option key={color.value} value={color.value}>{color.name}</option>)
+          }
         </NativeSelect>
-
-        <NativeSelect top="Друзья" value={filter.friends} onChange={handleChange("friends")}>
-          <option value="all">Все</option>
-          <option value="true">Есть Друзья</option>
-          <option value="false">Нет Друзей</option>
+        <NativeSelect top="Друзья" value={filter.friends} onChange={(e) => handleChange(e, FILTER_FIELDS.FRIENDS)} >
+          {
+            FRIENDS_OPTIONS.map(color => <option key={color.value} value={color.value}>{color.name}</option>)
+          }
         </NativeSelect>
-
-        <NativeSelect top="Цвет" value={filter.avatar_color} onChange={handleChange("avatar_color")}>
-          <option value="all">Все</option>
-          <option value="no-avatar">Нет цвета</option>
+        <NativeSelect top="Цвет" value={filter.avatar_color} onChange={(e) => handleChange(e, FILTER_FIELDS.AVATAR_COLOR)}>
+          {
+            COLOR_OPTIONS.map(color => <option key={color.value} value={color.value}>{color.name}</option>)
+          }
           {uniqueColors.map((color) => (
             <option key={color} value={color}>{color}</option>
           ))}
@@ -91,7 +82,7 @@ const ListCoop = ({ data }) => {
 
       <Panel id="group">
         <PanelHeader
-          left={<PanelHeaderBack onClick={() => setActivePanel("list")} />}
+          before={<PanelHeaderBack onClick={() => setActivePanel(ACTIVE_PANEL.LIST)} />}
         >
           {selectedGroup?.name}
         </PanelHeader>

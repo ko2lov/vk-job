@@ -3,6 +3,7 @@ import { AppRoot } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
 import ListCoop from "./components/ListCoop";
 import groupsData from "./groups.json";
+import { ERROR_MESSAGES } from "./constants";
 
 // Имитация задержки в 1 секунду
 const fetchGroups = () =>
@@ -16,21 +17,21 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchGroups();
-        if (response.result === 0 || !response.data) {
-          throw new Error("Ошибка получения данных");
-        }
-        setData(response.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetchGroups();
+      if (response.result === 0 || !response.data) {
+        throw new Error(ERROR_MESSAGES.FETCH_DATA);
+      }
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   if (loading) {
     return <div>Загрузка...</div>;
