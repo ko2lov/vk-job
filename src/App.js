@@ -1,11 +1,8 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AppRoot } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
 import ListCoop from "./components/ListCoop";
-import groupsData from "./groups.json"
-
-
+import groupsData from "./groups.json";
 
 // Имитация задержки в 1 секунду
 const fetchGroups = () =>
@@ -14,22 +11,25 @@ const fetchGroups = () =>
   );
 
 const App = () => {
-
-  console.dir(groupsData)
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchGroups()
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchGroups();
         if (response.result === 0 || !response.data) {
           throw new Error("Ошибка получения данных");
         }
         setData(response.data);
         setLoading(false);
-      })
-      .catch((error) => setError(error.message));
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {
