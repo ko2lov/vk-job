@@ -9,32 +9,40 @@ import {
   Placeholder,
   PanelHeaderBack,
   NativeSelect,
-  Cell
+  Cell,
 } from "@vkontakte/vkui";
 import { useState } from "react";
+
 const ListCoop = ({ data }) => {
   const [filter, setFilter] = useState({
     closed: "all",
     friends: "all",
-    avatar_color: "all"
+    avatar_color: "all",
   });
 
   const [activePanel, setActivePanel] = useState("list");
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const uniqueColors = [...new Set(data.map(group => group.avatar_color))].filter(Boolean);
+  const uniqueColors = [
+    ...new Set(data.map((group) => group.avatar_color)),
+  ].filter(Boolean);
 
   const filterGroups = () => {
-    return data.filter(group => (filter.closed === "all" || group.closed.toString() === filter.closed) &&
-    (filter.friends === "all" || (group.friends ? group.friends.length > 0 : false).toString() === filter.friends) &&
-    (filter.avatar_color === "all" || (group.avatar_color || "no-avatar") === filter.avatar_color));
+    return data.filter(
+      (group) =>
+        (filter.closed === "all" ||
+          group.closed.toString() === filter.closed) &&
+        (filter.friends === "all" ||
+          (group.friends ? group.friends.length > 0 : false).toString() ===
+            filter.friends) &&
+        (filter.avatar_color === "all" ||
+          (group.avatar_color || "no-avatar") === filter.avatar_color)
+    );
   };
   const filteredGroups = filterGroups();
   const handleGroupClick = (group) => {
     setSelectedGroup(group);
-    setActivePanel('group');
+    setActivePanel("group");
   };
-
-
 
   const onChange = (field) => (e) => {
     setFilter({
@@ -56,28 +64,18 @@ const ListCoop = ({ data }) => {
           <option value="false">Открытые</option>
         </NativeSelect>
 
-        <NativeSelect
-          top="Друзья"
-          onChange={onChange("friends")}
-        >
+        <NativeSelect top="Друзья" onChange={onChange("friends")}>
           <option value="all">Все</option>
           <option value="true">Есть Друзья</option>
           <option value="false">Нет Друзей</option>
         </NativeSelect>
 
-        <NativeSelect
-          top="Цвет"
-          onChange={onChange("avatar_color")}
-        >
+        <NativeSelect top="Цвет" onChange={onChange("avatar_color")}>
           <option value="all">Все</option>
           <option value="no-avatar">Нет цвета</option>
-          {
-            uniqueColors.map((color) => {
-
-              return <option value={color}>{color}</option>
-            })
-          }
-
+          {uniqueColors.map((color) => {
+            return <option value={color}>{color}</option>;
+          })}
         </NativeSelect>
 
         <Group header={<Header mode="secondary">Список групп</Header>}>
@@ -88,7 +86,12 @@ const ListCoop = ({ data }) => {
                 before={
                   <Avatar
                     size={100}
-                    style={{background: `${item?.avatar_color ? item.avatar_color : "black"}`, color: "grey"}}
+                    style={{
+                      background: `${
+                        item?.avatar_color ? item.avatar_color : "black"
+                      }`,
+                      color: "grey",
+                    }}
                     initials={item.name[0]}
                   />
                 }
@@ -104,7 +107,7 @@ const ListCoop = ({ data }) => {
           })}
         </Group>
       </Panel>
-    
+
       <Panel id="group">
         <PanelHeader
           before={<PanelHeaderBack onClick={() => setActivePanel("list")} />}

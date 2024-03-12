@@ -1,217 +1,216 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import {
-  AppRoot,
-} from '@vkontakte/vkui';
-import '@vkontakte/vkui/dist/vkui.css';
-import ListCoop from './components/ListCoop'
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { AppRoot } from "@vkontakte/vkui";
+import "@vkontakte/vkui/dist/vkui.css";
+import ListCoop from "./components/ListCoop";
 
 // Замоканные данные
 const groups = [
   {
-    "id": 1,
-    "name": "Котики",
-    "closed": false,
-    "avatar_color": "red",
-    "members_count": 457,
-    "friends": [
+    id: 1,
+    name: "Котики",
+    closed: false,
+    avatar_color: "red",
+    members_count: 457,
+    friends: [
       {
-        "first_name": "Маша",
-        "last_name": "Петрова"
+        first_name: "Маша",
+        last_name: "Петрова",
       },
       {
-        "first_name": "Фёдор",
-        "last_name": "Агапов"
+        first_name: "Фёдор",
+        last_name: "Агапов",
       },
       {
-        "first_name": "Вера",
-        "last_name": "Петрова"
-      }
-    ]
+        first_name: "Вера",
+        last_name: "Петрова",
+      },
+    ],
   },
   {
-    "id": 2,
-    "name": "Собачки",
-    "closed": false,
-    "avatar_color": "green",
-    "members_count": 147
+    id: 2,
+    name: "Собачки",
+    closed: false,
+    avatar_color: "green",
+    members_count: 147,
   },
   {
-    "id": 3,
-    "name": "Бабочки",
-    "closed": true,
-    "avatar_color": "yellow",
-    "members_count": 2,
-    "friends": [
+    id: 3,
+    name: "Бабочки",
+    closed: true,
+    avatar_color: "yellow",
+    members_count: 2,
+    friends: [
       {
-        "first_name": "Василий",
-        "last_name": "Гончаров"
-      }
-    ]
+        first_name: "Василий",
+        last_name: "Гончаров",
+      },
+    ],
   },
   {
-    "id": 4,
-    "name": "Утята",
-    "closed": false,
-    "avatar_color": "blue",
-    "members_count": 88,
-    "friends": [
+    id: 4,
+    name: "Утята",
+    closed: false,
+    avatar_color: "blue",
+    members_count: 88,
+    friends: [
       {
-        "first_name": "Маша",
-        "last_name": "Пивоварова"
+        first_name: "Маша",
+        last_name: "Пивоварова",
       },
       {
-        "first_name": "Илья",
-        "last_name": "Кот"
-      }
-    ]
+        first_name: "Илья",
+        last_name: "Кот",
+      },
+    ],
   },
   {
-    "id": 5,
-    "name": "Мишки",
-    "closed": true,
-    "avatar_color": "red",
-    "members_count": 4
+    id: 5,
+    name: "Мишки",
+    closed: true,
+    avatar_color: "red",
+    members_count: 4,
   },
   {
-    "id": 6,
-    "name": "Улитки",
-    "closed": true,
-    "members_count": 99,
-    "friends": [
+    id: 6,
+    name: "Улитки",
+    closed: true,
+    members_count: 99,
+    friends: [
       {
-        "first_name": "Маша",
-        "last_name": "Петрова"
-      }
-    ]
+        first_name: "Маша",
+        last_name: "Петрова",
+      },
+    ],
   },
   {
-    "id": 7,
-    "name": "Выдры",
-    "closed": false,
-    "avatar_color": "purple",
-    "members_count": 5,
-    "friends": [
+    id: 7,
+    name: "Выдры",
+    closed: false,
+    avatar_color: "purple",
+    members_count: 5,
+    friends: [
       {
-        "first_name": "Ирина",
-        "last_name": "Харитонова"
+        first_name: "Ирина",
+        last_name: "Харитонова",
       },
       {
-        "first_name": "Владислав",
-        "last_name": "Самсонов"
+        first_name: "Владислав",
+        last_name: "Самсонов",
       },
       {
-        "first_name": "Сергей",
-        "last_name": "Антонов"
-      }
-    ]
+        first_name: "Сергей",
+        last_name: "Антонов",
+      },
+    ],
   },
   {
-    "id": 8,
-    "name": "Зайки",
-    "closed": false,
-    "avatar_color": "white",
-    "members_count": 777
+    id: 8,
+    name: "Зайки",
+    closed: false,
+    avatar_color: "white",
+    members_count: 777,
   },
   {
-    "id": 9,
-    "name": "Кролики",
-    "closed": true,
-    "avatar_color": "yellow",
-    "members_count": 8,
-    "friends": [
+    id: 9,
+    name: "Кролики",
+    closed: true,
+    avatar_color: "yellow",
+    members_count: 8,
+    friends: [
       {
-        "first_name": "Даша",
-        "last_name": "Елец"
-      }
-    ]
+        first_name: "Даша",
+        last_name: "Елец",
+      },
+    ],
   },
   {
-    "id": 10,
-    "name": "Утконосы",
-    "closed": true,
-    "members_count": 0
+    id: 10,
+    name: "Утконосы",
+    closed: true,
+    members_count: 0,
   },
   {
-    "id": 11,
-    "name": "Куропатки",
-    "closed": false,
-    "avatar_color": "red",
-    "members_count": 33,
-    "friends": [
+    id: 11,
+    name: "Куропатки",
+    closed: false,
+    avatar_color: "red",
+    members_count: 33,
+    friends: [
       {
-        "first_name": "Зоя",
-        "last_name": "Петрова"
+        first_name: "Зоя",
+        last_name: "Петрова",
       },
       {
-        "first_name": "Марфа",
-        "last_name": "Зайцева"
-      }
-    ]
+        first_name: "Марфа",
+        last_name: "Зайцева",
+      },
+    ],
   },
   {
-    "id": 12,
-    "name": "Козлики",
-    "closed": false,
-    "members_count": 7,
-    "friends": [
+    id: 12,
+    name: "Козлики",
+    closed: false,
+    members_count: 7,
+    friends: [
       {
-        "first_name": "Катя",
-        "last_name": "Самсонова"
-      }
-    ]
+        first_name: "Катя",
+        last_name: "Самсонова",
+      },
+    ],
   },
   {
-    "id": 13,
-    "name": "Тигры",
-    "closed": false,
-    "avatar_color": "orange",
-    "members_count": 11,
-    "friends": [
+    id: 13,
+    name: "Тигры",
+    closed: false,
+    avatar_color: "orange",
+    members_count: 11,
+    friends: [
       {
-        "first_name": "Лев",
-        "last_name": "Лещенко"
+        first_name: "Лев",
+        last_name: "Лещенко",
       },
       {
-        "first_name": "Фёдор",
-        "last_name": "Бондарчук"
+        first_name: "Фёдор",
+        last_name: "Бондарчук",
       },
       {
-        "first_name": "Вера",
-        "last_name": "Брежнева"
-      }
-    ]
+        first_name: "Вера",
+        last_name: "Брежнева",
+      },
+    ],
   },
   {
-    "id": 14,
-    "name": "Птички",
-    "closed": true,
-    "avatar_color": "blue",
-    "members_count": 23
-  }
+    id: 14,
+    name: "Птички",
+    closed: true,
+    avatar_color: "blue",
+    members_count: 23,
+  },
 ];
 
 // Имитация задержки в 1 секунду
-const fetchGroups = () => new Promise(resolve => setTimeout(() => resolve({result:1, data: groups}), 100));
+const fetchGroups = () =>
+  new Promise((resolve) =>
+    setTimeout(() => resolve({ result: 1, data: groups }), 1000)
+  );
 
 const App = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const platform = usePlatform();
 
   useEffect(() => {
     fetchGroups()
-      .then(response => {
+      .then((response) => {
         if (response.result === 0 || !response.data) {
-          throw new Error('Ошибка получения данных');
+          throw new Error("Ошибка получения данных");
         }
         setData(response.data);
-        setLoading(false)
+        setLoading(false);
       })
-      .catch(error => setError(error.message));
+      .catch((error) => setError(error.message));
   }, []);
-
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -223,10 +222,8 @@ const App = () => {
 
   return (
     <AppRoot>
-    
-            <ListCoop data={data}/>
-          
-  </AppRoot>
+      <ListCoop data={data} />
+    </AppRoot>
   );
 };
 
